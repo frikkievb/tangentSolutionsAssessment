@@ -7,11 +7,18 @@
  * # MainCtrl
  * Controller of the tangentSolutionsAssessmentApp
  */
-angular.module('tangentSolutionsAssessmentApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+
+(function(){
+
+  function MainController(){
+    var vm = this;
+    vm.appName = 'Tangent App';
+    vm.user = 1;
+    console.log('hier');
+  }
+  angular.module('tangentSolutionsAssessmentApp')
+    .controller('MainCtrl', MainController);
+
+
+})();
+
