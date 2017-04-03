@@ -9,9 +9,11 @@
   <p class="form-group">
     <label for="username" class="sr-only">Username</label>
     <input name="username" id="username" placeholder="Username" ng-model="loginCtrl.credentials.username"
-           class="form-control" type="text" autocomplete="off" required autofocus/>
+           class="form-control" type="text" autocomplete="off" ng-keyup="$event.keyCode == 13
+                       && loginCtrl.login()" required autofocus/>
     <label for="password" class="sr-only">Password</label>
-    <input name="password" id="password" placeholder="Password" ng-model="loginCtrl.credentials.password"
+    <input name="password" id="password" ng-keyup="$event.keyCode == 13
+                       && loginCtrl.login()" placeholder="Password" ng-model="loginCtrl.credentials.password"
            class="form-control" type="password" required autocomplete="off"/>
   </p>
 

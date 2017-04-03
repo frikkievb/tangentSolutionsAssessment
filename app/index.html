@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Tangent App</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -13,6 +13,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/bootstrap-theme.css">
     <!-- endbuild -->
   </head>
   <body  ng-cloak ng-app="tangentSolutionsAssessmentApp" ng-controller="RootController as rootCtrl">
@@ -24,10 +25,12 @@
 
     <!-- Add your site or application content here -->
     <div class="header" ng-if="token">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-full">
           <div class="navbar-header">
-
+            <a class="navbar-brand" href="#">
+              <img alt="Brand" src="images/tangent-solutions-logo.png">
+            </a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
@@ -44,12 +47,17 @@
               <li><a ng-click="rootCtrl.navigate('projects');">Projects</a></li>
 
             </ul>
+
+            <ul class="nav navbar-nav pull-right">
+              <li><a ng-click="rootCtrl.logout('projects');">Logout</a></li>
+
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-full">
       <div ui-view=""></div>
     </div>
 
@@ -85,7 +93,9 @@
     <script src="bower_components/ngstorage/ngStorage.js"></script>
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/restangular/dist/restangular.js"></script>
+    <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
     <!-- endbower -->
+
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->

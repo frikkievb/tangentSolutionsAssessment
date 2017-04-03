@@ -10,13 +10,13 @@
 
 (function(){
 
-  function ProjectService(Restangular){
+  function ProjectService(Restangular,$sessionStorage){
 
     var vm = this;
     var moduleURL = "/projects/";
     var moduleAPI = Restangular.all(moduleURL);
 
-
+    vm.token = $sessionStorage.token
     function all(){
       return moduleAPI.getList()
     }
@@ -27,7 +27,7 @@
 
   }
 
-  ProjectService.$inject = ['Restangular'];
+  ProjectService.$inject = ['Restangular','$sessionStorage'];
   angular.module('tangentSolutionsAssessmentApp')
     .service('projectService', ProjectService);
 

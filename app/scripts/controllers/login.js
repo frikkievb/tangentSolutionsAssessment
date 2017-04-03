@@ -18,12 +18,14 @@
     };
 
     vm.login = function(){
-      authService.login(vm.credentials.username,vm.credentials.password)
-          .then(function(res){
+      if(vm.loginForm.$valid) {
+        authService.login(vm.credentials.username, vm.credentials.password)
+          .then(function (res) {
 
             $sessionStorage.token = res.data.token;
             $state.go("projects");
           })
+      }
     };
 
   }

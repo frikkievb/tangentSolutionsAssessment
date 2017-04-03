@@ -13,7 +13,13 @@
   function ProjectsCtrl(projects) {
     var vm = this;
     vm.projects = projects;
-    console.log(projects);
+
+    vm.currentTasks = {};
+
+    vm.showTasks = function(tasks){
+      vm.currentTasks = tasks;
+      $('#tasksModal').modal('show');
+    }
 
   }
 

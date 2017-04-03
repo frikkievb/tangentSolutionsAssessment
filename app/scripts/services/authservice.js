@@ -10,7 +10,7 @@
 
 (function(){
 
-  function AuthService($http,$q){
+  function AuthService($http,$q,$sessionStorage){
       var vm = this;
 
       function login(username,password){
@@ -18,12 +18,18 @@
 
       }
 
+      function logout(){
+        $sessionStorage.$reset();
+        return $q.resolve();
+      }
+
       return{
-        login:login
+        login:login,
+        logout:logout
       }
   }
 
-  AuthService.$inject = ['$http','$q'];
+  AuthService.$inject = ['$http','$q','$sessionStorage'];
   angular.module('tangentSolutionsAssessmentApp')
     .service('authService', AuthService);
 

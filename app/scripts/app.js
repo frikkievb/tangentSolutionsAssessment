@@ -10,6 +10,7 @@
  */
 (function () {
 
+
   var configuration = {
     apiUrl: "http://projectservice.staging.tangentmicroservices.com/api/v1/"
   }
@@ -88,30 +89,37 @@
         }
       })
 
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('/login');
   }
 
-  function RootController($state) {
+  function RootController($scope, $state, $sessionStorage,authService) {
     var vm = this;
     vm.appName = 'Tangent App';
     vm.user = 1;
 
+    vm.logout = function(){
+      authService.logout()
+        .then(function(){
+          $state.go("login");
+        })
+    }
     vm.navigate = function (state) {
       $state.go(state);
     };
 
+    $scope.$watch(function () {
+      return $sessionStorage.token;
+    }, function (newVal, oldVal) {
+
+      $scope.token = newVal;
+
+    })
+
   }
 
-  function run($rootScope, $sessionStorage,$state) {
+  function run($rootScope, $sessionStorage, $state) {
 
 
-    $rootScope.$watch(function(){
-      return $sessionStorage.token;
-    },function(newVal,oldVal){
-      if(!angular.equals(newVal,oldVal)){
-        $rootScope.token = newVal;
-      }
-    })
     $rootScope.$on("$stateChangeSuccess", function (ev, to, toParams, from, fromParams) {
       if (!$sessionStorage.token && !$sessionStorage.user) {
         $state.go("login");
@@ -119,9 +127,9 @@
     })
   }
 
-  RootController.$inject = ['$state'];
+  RootController.$inject = ['$scope', '$state', '$sessionStorage','authService'];
   config.$inject = ['$stateProvider', '$httpProvider', '$urlRouterProvider', 'CONFIG', 'RestangularProvider'];
-  run.$inject = ['$rootScope', '$sessionStorage','$state'];
+  run.$inject = ['$rootScope', '$sessionStorage', '$state'];
   angular
     .module('tangentSolutionsAssessmentApp', [
       'ngAnimate',
@@ -134,12 +142,30 @@
       'ngTouch',
       'ui.router',
       'ui.bootstrap',
+      'smart-table',
       'restangular'
     ])
     .config(config)
     .run(run)
     .constant("CONFIG", configuration)
-    .controller('RootController', RootController);
+    .controller('RootController', RootController)
+    .filter('myStrictFilter', function ($filter) {
+      return function (input, predicate) {
+        return $filter('filter')(input, predicate, true);
+      }
+    })
+    .filter('unique', function () {
+      return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for (i = 0; i < l; i += 1) {
+          o[arr[i][field]] = arr[i];
+        }
+        for (i in o) {
+          r.push(o[i]);
+        }
+        return r;
+      };
+    })
 
 
 })();
