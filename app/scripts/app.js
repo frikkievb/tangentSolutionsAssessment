@@ -15,12 +15,21 @@
     apiUrl: "http://projectservice.staging.tangentmicroservices.com/api/v1/"
   }
 
-  function config($stateProvider, $httpProvider, $urlRouterProvider, CONFIG, RestangularProvider) {
-
+  function config($stateProvider, $httpProvider, $urlRouterProvider, CONFIG, RestangularProvider,$resourceProvider) {
+    $resourceProvider.defaults.stripTrailingSlashes = true;
+    RestangularProvider.setRequestSuffix('/');
+    RestangularProvider.setRestangularFields({
+      id: "pk"
+    });
     // AuthProvider.setAuthUrl("http://userservice.staging.tangentmicroservices.com/api-token-auth/");
     RestangularProvider.setBaseUrl(CONFIG.apiUrl);
     RestangularProvider.setErrorInterceptor(function (response, deferred, responseHandler) {
-
+      //Overrides the default "id" field for Restangular with 'pk'.
+      RestangularProvider.configuration.getIdFromElem = function (elem) {
+        // if route is customers ==> returns customerID
+        console.log(elem);
+        return elem["pk"];
+      };
       if (response.status === 403) {
         refreshAccesstoken().then(function () {
           // Repeat the request and then call the handlers the usual way.
@@ -34,12 +43,6 @@
 
       return true; // error not handled
     });
-
-    //Overrides the default "id" field for Restangular.  This will concatenate the resource name + "ID"
-    RestangularProvider.configuration.getIdFromElem = function (elem) {
-      // if route is customers ==> returns customerID
-      return elem[_.initial(elem.route).join('') + "ID"];
-    };
 
 
     $httpProvider.interceptors.push(['$q', '$location', '$sessionStorage', function ($q, $location, $sessionStorage) {
@@ -92,14 +95,14 @@
     $urlRouterProvider.otherwise('/login');
   }
 
-  function RootController($scope, $state, $sessionStorage,authService) {
+  function RootController($scope, $state, $sessionStorage, authService) {
     var vm = this;
     vm.appName = 'Tangent App';
     vm.user = 1;
 
-    vm.logout = function(){
+    vm.logout = function () {
       authService.logout()
-        .then(function(){
+        .then(function () {
           $state.go("login");
         })
     }
@@ -117,9 +120,11 @@
 
   }
 
-  function run($rootScope, $sessionStorage, $state) {
+  function run($rootScope, $sessionStorage, $state,Restangular) {
 
-
+    // Restangular.configuration.getIdFromElem = function( elem ){
+    //   return elem["pk"];
+    // };
     $rootScope.$on("$stateChangeSuccess", function (ev, to, toParams, from, fromParams) {
       if (!$sessionStorage.token && !$sessionStorage.user) {
         $state.go("login");
@@ -127,9 +132,9 @@
     })
   }
 
-  RootController.$inject = ['$scope', '$state', '$sessionStorage','authService'];
-  config.$inject = ['$stateProvider', '$httpProvider', '$urlRouterProvider', 'CONFIG', 'RestangularProvider'];
-  run.$inject = ['$rootScope', '$sessionStorage', '$state'];
+  RootController.$inject = ['$scope', '$state', '$sessionStorage', 'authService'];
+  config.$inject = ['$stateProvider', '$httpProvider', '$urlRouterProvider', 'CONFIG', 'RestangularProvider','$resourceProvider'];
+  run.$inject = ['$rootScope', '$sessionStorage', '$state','Restangular'];
   angular
     .module('tangentSolutionsAssessmentApp', [
       'ngAnimate',

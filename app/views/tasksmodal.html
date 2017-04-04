@@ -1,0 +1,31 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="tasksModalCtrl.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Tasks</h4>
+  </div>
+  <div ng-if="tasksModalCtrl.tasks.length < 1">
+    <div class="alert alert-danger" role="alert">This project contains no tasks.</div>
+  </div>
+  <div ng-if="tasksModalCtrl.tasks.length > 0">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Due Date</th>
+        <th>Estimated Hours</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="task in tasksModalCtrl.tasks">
+        <td><strong>{{task.title | uppercase}}</strong></td>
+        <td>{{task.due_date | date:'yyyy-MM-dd'}}</td>
+        <td>{{task.estimated_hours}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="tasksModalCtrl.cancel()">Close</button>
+  </div>
+</div>
